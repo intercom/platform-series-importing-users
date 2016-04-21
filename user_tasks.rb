@@ -5,6 +5,11 @@ class UserTasks < IntercomClient
   def initialize()
   end
 
+  def create_user(args)
+    #Create a new user with list of values passed on setup
+    user = @@intercom.users.create(args)
+  end
+
   def find_user(criteria)
     begin
       #Check for users via the unique ID
@@ -17,6 +22,25 @@ class UserTasks < IntercomClient
         #Check for users via email address
         user = @@intercom.users.find(:email => criteria)
       end
+    end
+  end
+
+  def bulk_create(csv_file)
+    #Check to make sure the CSV file eixsts
+    if File.exist?(csv_file)
+      file = File.open(csv_file, "rb")
+      body = file.read
+
+      #Need to add to the CSV model to handle empty fields
+      CSV::Converters[:blank_to_nil] = lambda do |field|
+        field && field.empty? ? nil : field
+      end
+      csv = CSV.new(body, :headers => true, :header_converters => :symbol, :converters => [:all, :blank_to_nil])
+      csv_data = csv.to_a.map {|row| row.to_hash }
+
+      @@intercom.users.submit_bulk_job(create_items: csv_data )
+    else
+      puts("No CSV file found")
     end
   end
 
@@ -34,11 +58,6 @@ class UserTasks < IntercomClient
     user.custom_attributes[attrib] = value
     # Save the resultant change
     intercom.users.save(user)
-  end
-
-  def create_user(args)
-    #Create a new user with list of values passed on setup
-    user = @@intercom.users.create(args)
   end
 
   def show_attrib(criteria, attrib )
@@ -66,25 +85,6 @@ class UserTasks < IntercomClient
         end
       else
         puts("Only one tag please!")
-    end
-  end
-
-  def bulk_create(csv_file)
-    #Check to make sure the CSV file eixsts
-    if File.exist?(csv_file)
-      file = File.open(csv_file, "rb")
-      body = file.read
-
-      #Need to add to the CSV model to handle empty fields
-      CSV::Converters[:blank_to_nil] = lambda do |field|
-        field && field.empty? ? nil : field
-      end
-      csv = CSV.new(body, :headers => true, :header_converters => :symbol, :converters => [:all, :blank_to_nil])
-      csv_data = csv.to_a.map {|row| row.to_hash }
-
-      @@intercom.users.submit_bulk_job(create_items: csv_data )
-    else
-      puts("No CSV file found")
     end
   end
 end

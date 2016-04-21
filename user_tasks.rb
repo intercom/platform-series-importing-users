@@ -3,7 +3,6 @@ require "csv"
 
 class UserTasks < IntercomClient
   def initialize()
-    #super(app_id, api_key)
   end
 
   def find_user(criteria)
@@ -63,12 +62,11 @@ class UserTasks < IntercomClient
         @@intercom.users.submit_bulk_job(delete_items: email_array)
       when 1
         emails = @@intercom.users.all.map do |user|
-          user.tags.each {|val| val.include?(tag) ? user.email}
+          user.tags.each {|val| user.email if val.include?(tag)}
         end
       else
         puts("Only one tag please!")
     end
-
   end
 
   def bulk_create(csv_file)

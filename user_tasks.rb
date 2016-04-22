@@ -44,22 +44,6 @@ class UserTasks < IntercomClient
     end
   end
 
-  def delete_user(criteria)
-    #delete user using either email, user id or id
-    user = find_user(criteria)
-    deleted_user = @@intercom.users.delete(user)
-  end
-
-  def update_customer_attrib(criteria, attrib, value)
-    #Create new custom attributes for a user or update existing ones
-    #1/ Find the user first
-    user = find_user(criteria)
-    # Set/Update the relevant Attribute
-    user.custom_attributes[attrib] = value
-    # Save the resultant change
-    intercom.users.save(user)
-  end
-
   def show_attrib(criteria, attrib )
     begin
       #First we check whether this is a standard attribute
@@ -73,16 +57,40 @@ class UserTasks < IntercomClient
     end
   end
 
+  def update_customer_attrib(criteria, attrib, value)
+    #Create new custom attributes for a user or update existing ones
+    #1/ Find the user first
+    user = find_user(criteria)
+    # Set/Update the relevant Attribute
+    user.custom_attributes[attrib] = value
+    # Save the resultant change
+    @@intercom.users.save(user)
+  end
+
+  def delete_user(criteria)
+    #delete user using either email, user id or id
+    user = find_user(criteria)
+    deleted_user = @@intercom.users.delete(user)
+  end
+
   def bulk_delete(*tag)
-    case attrib.length
+    case tag.length
       when 0
         emails = @@intercom.users.all.map {|user| user.email }
         email_array = emails.collect{|e|{'email'.to_sym => e}}
-        @@intercom.users.submit_bulk_job(delete_items: email_array)
+        #You can use this to automatically delete all your users
+        #@@intercom.users.submit_bulk_job(delete_items: email_array)
+        #But for safety purposes it might be good to just use it to get
+        #a list of users which you can pass to a bulk job
+        puts(email_array)
       when 1
-        emails = @@intercom.users.all.map do |user|
-          user.tags.each {|val| user.email if val.include?(tag)}
+        emails = Array.new
+        @@intercom.users.all.map do |user|
+          user.tags.each {|val| emails << user.email if val.name.include?(tag[0])}
         end
+        email_array = emails.collect{|e|{'email'.to_sym => e}}
+        puts(email_array)
+        #@@intercom.users.submit_bulk_job(delete_items: email_array)
       else
         puts("Only one tag please!")
     end

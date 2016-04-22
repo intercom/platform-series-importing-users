@@ -3,10 +3,7 @@ require './user_tasks'
 
 class TagTasks < IntercomClient
   def initialize()
-  #  super(app_id, api_key)
-  #  user = UserTasks.new(@app_id, @api_key)
   end
-
 
   def tag_user(criteria, tag)
     user = UserTasks.new()
@@ -24,6 +21,6 @@ class TagTasks < IntercomClient
   end
 
   def untag(criteria, tag)
-    @@intercom.tags.untag(name: 'blue',  users: [{user_id: "42ea2f1b93891f6a99000427"}])
+    @@intercom.tags.untag(name: criteria,  users: [{user_id: tag}])
   end
 end

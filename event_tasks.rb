@@ -35,9 +35,9 @@ class EventTasks < IntercomClient
 
   def bulk_create(events, job=false)
     if job
-      @@intercom.events.submit_bulk_job(create_items: events)
-    else
       @@intercom.events.submit_bulk_job(create_items: events, job_id: job)
+    else
+      @@intercom.events.submit_bulk_job(create_items: events)
     end
   end
 end

@@ -5,7 +5,7 @@ class WebhookTasks < IntercomClient
     #Leave this empty as simple over-ride
   end
 
-  def create_webhook(url, topics, events=false)
+  def create_webhook(url, topics, events=false, signed=false)
     if events
       event_data = {
           service_type: "web",
@@ -15,12 +15,20 @@ class WebhookTasks < IntercomClient
           event_names: events
           }
       }
+      #Check if user want to sign request
+      if signed
+        #events[hub_secret] = ["#{signed}"];
+        event_data[:hub_secret] = signed;
+      end
       #Need to POST event metadata for event.created topic
       @@intercom.post("/subscriptions/", event_data)
     else
       #Create a hash to pass through the Webhook data
       webhook = {:url => url,
                  :topics => topics}
+      if signed
+        webhook[:hub_secret] = signed;
+      end
       @@intercom.subscriptions.create(webhook)
     end
   end
@@ -57,5 +65,10 @@ class WebhookTasks < IntercomClient
     #Delete single subscription given Subscription ID
     #We dont have any query parameters so 2nd function param is empty string
     @@intercom.delete("/subscriptions/#{id}", "")
+  end
+
+  def ping(id)
+    #ping subscription to test webhook
+    @@intercom.post("/subscriptions/#{id}/ping", "")
   end
 end

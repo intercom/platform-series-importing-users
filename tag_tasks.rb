@@ -23,4 +23,11 @@ class TagTasks < IntercomClient
   def untag(criteria, tag)
     @@intercom.tags.untag(name: criteria,  users: [{user_id: tag}])
   end
+
+  def create_tag(tag)
+    tag_data = {
+        name: tag
+    }
+    @@intercom.post("/tags", tag_data)
+  end
 end

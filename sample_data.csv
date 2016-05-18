@@ -1,0 +1,17 @@
+email,name,user_id,id,signed_up_at,last_seen_ip,custom_attributes,last_seen_user_agent,companies,last_request_at
+kierkegaard@existentialist.com,Soren,1,,,,school:existentialism;books:4
+nietzche@existentialist.com,Fred,2,,,,
+heidegger@existentialist.com,Martin,3,,,,
+sartre@existentialist.com,Jean,4,,,,
+beauvoir@existentialist.com,Simone,5,,,,
+camus@existentialist.com,Al,6,,,,
+locke@empiricist.com,John,7,,,,
+berkeley@empiricist.com,George,8,,,,
+hume@empiricist.com,Dave,9,,,,
+bacon@empiricist.com,Frank,10,,,,
+descartes@rationalist.com,Rene,11,,,,
+spinoza@rationalist.com,Baruch,12,,,,
+leibniz@rationalist.com,Gottfried,13,,,,
+kant@rationalist.com,Immanuel,14,,,,
+hagel@phenomenology.com,Georg,15,,,,
+husserl@phenomenology.com,Ed,16,,,,

@@ -55,13 +55,18 @@ def sample_data(csv_file, app_id, api_key)
       #puts user_data
       puts "Creating user:#{row['email']}"
 
-      #Create tags for each grouping of Users based on the
-      # the email address of the users
-      tag_names = row['email'].split(/['@''.']/)
-      tag.tag_user(row['user_id'], tag_names[1])
+      #Create tags for the users
+      if not row['tags'].nil?
+        for user_tag in row['tags'].split('::')
+          tag.tag_user(row['user_id'], user_tag)
+        end
+      end
 
       #Create example events for users
-      3.times {event.submit_event(philosophy_events.sample , Time.now.to_i, row['user_id'])}
+      if not row['events'].nil?
+        events = row['events'].split('::')
+        3.times {event.submit_event(events.sample , Time.now.to_i, row['user_id'])}
+      end
 
       #Create some sample conversations
       #First get an admin id

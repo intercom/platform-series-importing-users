@@ -35,6 +35,38 @@ class ConversationTasks < IntercomClient
     @@intercom.post("/messages/", msg_data)
   end
 
+  def admin_reply(convo_id, admin_id, options={})
+    defaults ={
+        :type => 'admin',
+        :message_type => 'comment',
+        :body => "default text"
+    }
+    #Override the deafults if set in options
+    options = defaults.merge(options)
+
+    @@intercom.conversations.reply(:id => convo_id, :type => options[:type],
+                                   :admin_id => admin_id,
+                                   :message_type => options[:message_type], :body => options[:body])
+  end
+
+  def user_reply(convo_id, criteria, options={})
+    #Find user using email, id or user_id
+    user = UserTasks.new()
+    usr = user.find_user(criteria)
+
+    defaults ={
+        :type => 'user',
+        :message_type => 'comment',
+        :body => "default text"
+    }
+    #Override the deafults if set in options
+    options = defaults.merge(options)
+
+    @@intercom.conversations.reply(:id => convo_id, :type => options[:type],
+                                   :email => usr.email,
+                                   :message_type => options[:message_type], :body => options[:body])
+  end
+
   def find_all_convos()
     convos = @@intercom.get("/conversations", "")
     convos['conversations'].each {|convo| puts("\nID: #{convo['id']}, \nUSER: #{convo['user']}, \nASSIGNEE: #{convo['assignee']}\n")}
@@ -71,48 +103,24 @@ class ConversationTasks < IntercomClient
                                                :type => options[:type],
                                                :unread => options[:unread])
     convos.each{|convo| puts("ID: #{convo.id}, \nUSER: #{convo.user.id}, \nASSIGNEE: #{convo.assignee.id}")}
+    return convos
   end
 
   def find_convo(id)
     @@intercom.conversations.find(:id => id)
   end
 
-  def admin_reply(convo_id, admin_id, options={})
-    defaults ={
-        :type => 'admin',
-        :message_type => 'comment',
-        :body => "default text"
-    }
-    #Override the deafults if set in options
-    options = defaults.merge(options)
-
-    @@intercom.conversations.reply(:id => convo_id, :type => options[:type],
-                                   :admin_id => admin_id,
-                                   :message_type => options[:message_type], :body => options[:body])
-  end
-
-  def user_reply(convo_id, criteria, options={})
-    #Find user using email, id or user_id
-    user = UserTasks.new()
-    usr = user.find_user(criteria)
-
-    defaults ={
-        :type => 'user',
-        :message_type => 'comment',
-        :body => "default text"
-    }
-    #Override the deafults if set in options
-    options = defaults.merge(options)
-
-    @@intercom.conversations.reply(:id => convo_id, :type => options[:type],
-                                   :email => usr.email,
-                                   :message_type => options[:message_type], :body => options[:body])
-  end
-
-  def list_admins()
-    @@intercom.admins.all.each {|admin| puts("ADMIN NAME: #{admin.name},
+  def list_admins(show=true)
+    if show
+      @@intercom.admins.all.each {|admin| puts("ADMIN NAME: #{admin.name},
                                              \nADMIN ID #{admin.id},
                                              \nADMIN EMAIL: #{admin.email}")}
+    else
+      admin_list = []
+      @@intercom.admins.all.each {|admin| admin_list << admin.id}
+      return admin_list
+    end
+
   end
 
   def convo_action(action, options ={})

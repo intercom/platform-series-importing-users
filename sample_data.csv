@@ -1,17 +1,19 @@
-email,name,user_id,id,signed_up_at,last_seen_ip,custom_attributes,last_seen_user_agent,companies,last_request_at
-kierkegaard@existentialist.com,Soren,1,,,,school:existentialism;books:4
-nietzche@existentialist.com,Fred,2,,,,
-heidegger@existentialist.com,Martin,3,,,,
-sartre@existentialist.com,Jean,4,,,,
-beauvoir@existentialist.com,Simone,5,,,,
-camus@existentialist.com,Al,6,,,,
-locke@empiricist.com,John,7,,,,
-berkeley@empiricist.com,George,8,,,,
-hume@empiricist.com,Dave,9,,,,
-bacon@empiricist.com,Frank,10,,,,
-descartes@rationalist.com,Rene,11,,,,
-spinoza@rationalist.com,Baruch,12,,,,
-leibniz@rationalist.com,Gottfried,13,,,,
-kant@rationalist.com,Immanuel,14,,,,
-hagel@phenomenology.com,Georg,15,,,,
-husserl@phenomenology.com,Ed,16,,,,
+email,name,user_id,id,signed_up_at,last_seen_ip,custom_attributes,last_seen_user_agent,companies,last_request_at,conversations
+kierkegaard@existentialist.com,Soren,1,,,,school:existentialism;books:4,,,,Life is not a problem to be solved but a reality to be experienced.::People understand me so poorly that they dont even understand my complaint about them not understanding me.::Most men pursue pleasure with such breathless haste that they hurry past it
+nietzche@existentialist.com,Fred,2,,,,school:existentialism;books:10;character:zarathustra,,,,There is always some madness in love but there is also always some reason in madness::He who has a why to live can bear almost any how::There are no facts only interpretations
+heidegger@existentialist.com,Martin,3,,,,occupation:philosopher;book:being and time,,,,Every man is born as many men and dies as a single one::The most thought-provoking thing in our thought-provoking time is that we are still not thinking::Man acts as though he were the shaper and master of language while in fact language remains the master of man
+sartre@existentialist.com,Jean,4,,,,"meetup:cafe de flore;partner:Simone de Beauvoir
+",,,,Man is condemned to be free because once thrown into the world he is responsible for everything he does::Freedom is what you do with what's been done to you::Everything has been figured out except how to live
+beauvoir@existentialist.com,Simone,5,,,,born:1908;died:1986,,,,One is not born a genius one becomes a genius::All oppression creates a state of war::I tore myself away from the safe comfort of certainties through my love for truth  and truth rewarded me
+camus@existentialist.com,Al,6,,,,sport:football;awards:nobel,,,,Nobody realizes that some people expend tremendous energy merely to be normal::Autumn is a second spring when every leaf is a flower::Don't walk behind me I may not lead Don't walk in front of me I may not follow Just walk beside me and be my friend
+locke@empiricist.com,John,7,,,,born:1632;title:father of liberalism,,,,"All mankind being all equal and independent no one ought to harm another in his life health liberty or possessions::No man's knowledge here can go beyond his experience::
+What worries you masters you"
+berkeley@empiricist.com,George,8,,,,born:kilkenny;known for:immaterialism,,,,All the choir of heaven and furniture of earth in a word all those bodies which compose the frame of the world have not any subsistence without a mind::Truth is the cry of all but the game of few::He who says there is no such thing as an honest man you may be sure is himself a knave
+hume@empiricist.com,Dave,9,,,,,,,,
+bacon@empiricist.com,Frank,10,,,,,,,,
+descartes@rationalist.com,Rene,11,,,,,,,,
+spinoza@rationalist.com,Baruch,12,,,,,,,,
+leibniz@rationalist.com,Gottfried,13,,,,,,,,
+kant@rationalist.com,Immanuel,14,,,,,,,,
+hagel@phenomenology.com,Georg,15,,,,,,,,
+husserl@phenomenology.com,Ed,16,,,,,,,,

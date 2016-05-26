@@ -22,32 +22,31 @@ class CompanyTasks < IntercomClient
     if custom_data
       company[:custom_attributes] = custom_data
     end
-    puts company
-
     usr.companies = ([company])
     @@intercom.users.save(usr)
-
   end
 
   def find_companies(criteria)
     begin
       #Use exceptions to check other search criteria
-      user = @@intercom.companies.find(:id => criteria)
+      @@intercom.companies.find(:id => criteria)
     rescue Intercom::ResourceNotFound
       begin
         #Check for users via company id if we receive not found error
-        user = @@intercom.companies.find(:company_id=> criteria)
+         @@intercom.companies.find(:company_id=> criteria)
       rescue Intercom::ResourceNotFound
         #Check for users via company name
-        user = @@intercom.companies.find(:name => criteria)
+        @@intercom.companies.find(:name => criteria)
       end
     end
   end
 
-  def list_companies(attrib=false)
-    if attrib
-      @@intercom.companies.all.each {|company| puts "#{company.name}:#{company.company_id} "\
-                                      "- #{attrib}:#{company.custom_attributes[attrib]}"}
+  def list_companies(*attribs)
+    if attribs
+      @@intercom.companies.all.each do |company|
+        puts "#{company.name}:#{company.company_id} "
+        attribs.each {|attrib| puts "- #{attrib}:#{company.custom_attributes[attrib]}"}
+      end
     else
       @@intercom.companies.all.map {|company| puts "Company Name: #{company.name}, Company ID: #{company.company_id}" }
     end
@@ -60,9 +59,8 @@ class CompanyTasks < IntercomClient
     if attrib
       users_list.each {|usr| puts usr.send(attrib.to_sym)}
     else
-      #Just return the list to alow user perform custom actions
+      #Just return the list to allow user perform custom actions
       return(users_list)
     end
-
   end
 end

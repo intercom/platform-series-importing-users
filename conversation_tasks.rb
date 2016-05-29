@@ -102,7 +102,7 @@ class ConversationTasks < IntercomClient
     convos = @@intercom.conversations.find_all(:email => options[:email],
                                                :type => options[:type],
                                                :unread => options[:unread])
-    convos.each{|convo| puts("ID: #{convo.id}, \nUSER: #{convo.user.id}, \nASSIGNEE: #{convo.assignee.id}")}
+    #convos.each{|convo| puts("ID: #{convo.id}, \nUSER: #{convo.user.id}, \nASSIGNEE: #{convo.assignee.id}")}
     return convos
   end
 

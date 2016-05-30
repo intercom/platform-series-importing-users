@@ -27,27 +27,21 @@ class LeadTasks < IntercomClient
                         "USER_ID: #{lead.user_id}, ID: #{lead.id}"}
         else
           begin
-            lead = @@intercom.get("/contacts", user_id: criteria)
+            lead = @@intercom.contacts.find(user_id: criteria)
             return lead
           rescue Intercom::ResourceNotFound
-            lead = @@intercom.get("/contacts/#{criteria}", "")
+            lead = @@intercom.contacts.find(id: criteria)
             return lead
           end
         end
     end
   end
 
-  def update_lead_attrib(user_id, attrib=false, value=false)
+  def update_lead_attrib(id_or_user_id, attrib=false, value=false)
     #Create new custom attributes for a lead or update existing ones
-    #1/ Find the user first
-    lead = find_leads(user_id)
-    #Create the Json Object
-    update = {
-        user_id: lead['user_id'],
-        attrib.to_sym => value,
-    }
-    # Set/Update the relevant Attribute
-    @@intercom.post("/contacts/", update)
+    lead = find_leads(id_or_user_id)
+    lead.custom_attributes[attrib] = value
+    @@intercom.contacts.save(lead)
   end
 
 end

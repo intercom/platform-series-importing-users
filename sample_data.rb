@@ -71,7 +71,7 @@ def sample_data(csv_file, app_id, api_key)
       #Create some sample conversations
       #First get an admin id
       admins = convo.list_admins(show=false)
-      if admins.length <= 1
+      if admins.length = 0
         puts "No Admins Found"
       else
         convo.create_admin_message("Sample Subject",

@@ -62,7 +62,14 @@ class UserTasks < IntercomClient
     #1/ Find the user first
     user = find_user(criteria)
     # Set/Update the relevant Attribute
-    user.custom_attributes[attrib] = value
+    begin
+      user.send(attrib.to_sym)
+      #If no exception thrown then set the standard attribute
+      user.send("#{attrib}=", value)
+    rescue Intercom::AttributeNotSetError
+      #If we jump in here then we will assume it is a custom attribute
+      user.custom_attributes[attrib] = value
+    end
     # Save the resultant change
     @@intercom.users.save(user)
   end

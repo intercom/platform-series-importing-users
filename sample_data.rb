@@ -11,19 +11,10 @@ def sample_data(csv_file, app_id, api_key)
   tag = TagTasks.new
   event = EventTasks.new
 
-  #List of user attribtues
+  #List of standard user attribtues we can create via the CSV
   user_attributes = ["email","name","user_id","id","signed_up_at",
                      "last_seen_ip","last_seen_user_agent",
                      "companies","last_request_at"]
-
-  #List of admin responses
-  admin_responses = ["hmm", "really?", "not sure", "interesting",
-                     "thats deep", "Never thought about that", "chances are slim",
-                     "do you like gifs?", "I dont know that much philosophy",
-                     "whats the job market like for philosophers?"]
-
-  #List of user hellos
-  hello = ["yo", "yo yo", "hey", "Hi", "Hello", "Whats up", "word", "whats the craic", "how you doin"]
 
   #Iterate through each row and check for user attributes
   CSV.foreach(csv_file, headers:true) do |row|

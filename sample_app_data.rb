@@ -10,7 +10,7 @@ def sample_data_app(app_id, api_key, users_num)
   IntercomClient.new(app_id, api_key)
   #Instantiate your user class
   usr = UserTasks.new
-  intercom = Intercom::Client.new(app_id: "ja43hiec", api_key: "01e6ba2697aee63c22c4118a1d74845ed643e350")
+  intercom = Intercom::Client.new(app_id: app_id, api_key: api_key)
 
   all_users = []
   now = Time.now.to_i

@@ -7,12 +7,14 @@ require 'namey'
 require "json"
 require 'user_agent_randomizer'
 require './sample_companies'
+require './lead_tasks'
 
-def sample_data_app(app_id, api_key, users_num)
+def sample_data_app(app_id, api_key, users_num, leads=false)
   #Initialize Intercom with your credentials
   IntercomClient.new(app_id, api_key)
   #Instantiate your user class
   usr = UserTasks.new
+  lead = LeadTasks.new
   generator = Namey::Generator.new
   intercom = Intercom::Client.new(app_id: app_id, api_key: api_key)
 
@@ -24,12 +26,20 @@ def sample_data_app(app_id, api_key, users_num)
                       "Stantam","Techitrans",
                       "10 Cities", "Supertouch"]
   gender_list = ["male", "female"]
-
+  ip_addresses = ["136.0.16.217","85.90.227.224","79.125.105.1",
+                  "177.8.170.11","180.216.82.251","27.131.106.10",
+                  "128.122.253.1","85.214.132.117","184.154.83.119",
+                  "194.32.31.1","106.51.30.0","219.93.13.232"]
+  non_company_emails = ["bestmail.com", "examplemail.io", "supermail.net",
+                        "genericmail.io", "fantasticmail.net", "iconicemail.com"]
   all_users = []
   now = Time.now.to_i
+  eighty_days_ago = now - 80 * 60 * 60 * 24
+  two_months_ago = now - 60 * 60 * 60 * 24
+  one_month_ago = now - 30 * 60 * 60 * 24
   five_days_ago = now - 5 * 60 * 60 * 24
   a_day_ago = now - 60 * 60 * 24
-  a_minute_ago = now - 60
+  two_hours_ago = now - 2 * 60 * 60
   an_hour_ago = now - 60 * 60
 
   #Create users and store them in array
@@ -37,32 +47,65 @@ def sample_data_app(app_id, api_key, users_num)
     user_data = {}
     #Lets pick a gender
     gender = gender_list.sample
+    #30% of time we do not want user to have company
+    has_company = Faker::Boolean.boolean(0.9)
+    company_name = company_names.sample
+    email_domain = SampleCompanies::EMAILS[company_name]
+
+    #Check that it is a user (leads have no companies associated with them)
+    if not leads and has_company
+      #Add some random company data
+      companies = SampleCompanies::COMPANIES[company_name]
+      user_data[:companies] = [companies]
+    end
 
     #Add details like name and email
-    #user_data[:name] = Faker::Name.name
     #Get US Census data for valid names
-    user_data[:name] = generator.send(gender, :common)
-    user_data[:email] = Faker::Internet.free_email(user_data[:name])
-    user_data[:user_id] = Faker::Number.number(5)
+    users_name = generator.send(gender, :common)
+    if not leads
+      user_data[:name] = users_name
+    end
+
+    if not leads
+      #Set email to company email if they have one
+      if has_company
+        user_data[:email] = Faker::Internet.user_name(users_name) + "@" + email_domain
+      else
+        user_data[:email] = Faker::Internet.user_name(users_name) + "@" + non_company_emails.sample
+      end
+    else
+      #If it is a lead than we need to create some with no emails
+      if Faker::Boolean.boolean(0.3)
+        user_data[:email] = Faker::Internet.user_name(users_name) + "@"
+                            non_company_emails.sample
+      end
+    end
+    if not leads
+      user_data[:user_id] = Faker::Number.number(5)
+    end
 
     #Add some data for time
-    user_data[:created_at] = rand(five_days_ago..a_day_ago)
-    user_data[:last_request_at] = rand(an_hour_ago..now)
-    user_data[:signed_up_at] = rand(five_days_ago..a_day_ago)
+    if not leads
+      user_data[:signed_up_at] = rand(eighty_days_ago..two_months_ago)
+    end
+    #user_data[:created_at] = rand(two_months_ago..one_month_ago)
+    user_data[:last_request_at] = rand(two_hours_ago..an_hour_ago)
     #30% of the time we will set it to now time
     user_data[:update_last_request_at] = Faker::Boolean.boolean(0.3)
 
-
     #Create location via last seen ip
-    user_data[:last_seen_ip] = Faker::Internet.public_ip_v4_address
+    #user_data[:last_seen_ip] = Faker::Internet.public_ip_v4_address
+    user_data[:last_seen_ip] = ip_addresses.sample
 
     #get some sample avatars to use
-    uri = URI.parse("http://api.randomuser.me/?gender=" + gender + "&inc=picture")
-    response = Net::HTTP.get_response(uri)
-    avatar_url = JSON.parse(response.body)['results'][0]['picture']['large']
-    avatar = {:image_url => avatar_url}
-    user_data[:avatar] = avatar
-
+    if not leads
+      uri = URI.parse("http://api.randomuser.me/?gender=" + gender + "&inc=picture")
+      response = Net::HTTP.get_response(uri)
+      avatar_url = JSON.parse(response.body)['results'][0]['picture']['large']
+      avatar = {:image_url => avatar_url}
+      user_data[:avatar] = avatar
+    end
+    
     #Add some data for Browser info
     user_agent = UserAgentRandomizer::UserAgent.fetch
     user_data[:last_seen_user_agent] = user_agent.string
@@ -70,13 +113,11 @@ def sample_data_app(app_id, api_key, users_num)
 
     #Enable setting so it count as a web sessions
     user_data[:new_session] = true
-    #Add some random company data
-    companies = SampleCompanies::COMPANIES[company_names.sample]
-    user_data[:companies] = [companies]
 
     #Add some custom fields
     custom_attribs = {
         :Projects => Faker::Number.between(0, 20),
+        :Reports => Faker::Number.between(1, 20),
         :Apps => Faker::Number.between(0, 5),
         :Teammates => Faker::Number.between(0, 50),
         :PAID => Faker::Boolean.boolean(0.7),
@@ -87,12 +128,18 @@ def sample_data_app(app_id, api_key, users_num)
 
     #Put it all in an array so we can bulk create it
     all_users << user_data
+    #if it is leads there are no bulk jobs
+    if leads
+      lead.create_lead(user_data)
+    end
     #usr.create_user(user_data)
 
   }
-  intercom.users.submit_bulk_job(create_items: all_users)
+  if not leads
+    #intercom.users.submit_bulk_job(create_items: all_users)
+  end
   puts all_users
 
 end
 
-sample_data_app(ARGV[0], ARGV[1], ARGV[2])
+sample_data_app(ARGV[0], ARGV[1], ARGV[2], ARGV[3])

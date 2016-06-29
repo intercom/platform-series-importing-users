@@ -19,8 +19,8 @@ class LeadTasks < IntercomClient
                                 "USER_ID: #{contact['user_id']}, ID: #{contact['id']}"}
       end
     else
-      #Lets use the criteria in differnent ways to serach contacts
-        #Check againse email
+      #Lets use the criteria in different ways to serach contacts
+        #Check against email
         lead_list = @@intercom.contacts.find_all(:email => criteria)
         #Check if email returned anything
         if lead_list.any?

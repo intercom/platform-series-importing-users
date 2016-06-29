@@ -30,7 +30,7 @@ def web_increment(app_id, api_key, users=[])
       )
       #usr.update_customer_attrib(user_criteria, "update_last_request_at", false)
 
-      #usr.update_customer_attrib(user_criteria, "update_last_request_at", true)
+      usr.update_customer_attrib(user_criteria, "update_last_request_at", true)
       #usr.update_customer_attrib(user_criteria, "last_request_at", rand(a_day_ago..an_hour_ago))
 
       #puts(usr.find_user(user_criteria).last_request_at)

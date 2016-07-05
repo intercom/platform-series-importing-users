@@ -13,8 +13,7 @@ def web_increment(app_id, api_key, users=[])
   an_hour_ago = now - 60 * 60
 
   user_list.each do |user_criteria|
-    puts user_criteria
-    sessions_num = Faker::Number.between(4, 10)
+    sessions_num = Faker::Number.between(1, 3)
     usr.update_customer_attrib(user_criteria, "new_session", true)
     usr.update_customer_attrib(user_criteria, "last_request_at", rand(a_day_ago..an_hour_ago))
 
@@ -34,6 +33,9 @@ def web_increment(app_id, api_key, users=[])
       #usr.update_customer_attrib(user_criteria, "last_request_at", rand(a_day_ago..an_hour_ago))
 
       #puts(usr.find_user(user_criteria).last_request_at)
+      puts user_criteria
+      puts sessions_num
+      sleep 1
     }
   end
 

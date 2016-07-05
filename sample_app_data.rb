@@ -9,7 +9,11 @@ require 'user_agent_randomizer'
 require './sample_companies'
 require './lead_tasks'
 
-def sample_data_app(app_id, api_key, users_num, leads=false)
+def sample_data_app(app_id, api_key, users_num, leads=false, bulk=true)
+  #we get strings from cmd line so set values to boolean
+  leads = leads.split('=')[1]=="false" ? false : true
+  bulk = bulk.split('=')[1]=="false" ? false : true
+
   #Initialize Intercom with your credentials
   IntercomClient.new(app_id, api_key)
   #Instantiate your user class
@@ -22,12 +26,17 @@ def sample_data_app(app_id, api_key, users_num, leads=false)
   #that will allow us to reuse them and add more employees to each
   #and also to keep the company data the same over time
   company_names = ["Instacorp","Duolux","Zencity",
-                      "Virtucon","Lidax","Nugreen",
-                      "Stantam","Techitrans",
-                      "10 Cities", "Supertouch"]
+                   "Virtucon","Lidax","Nugreen",
+                   "Stantam","Techitrans",
+                   "10 Cities", "Supertouch", "Calmblue",
+                   "Dotsense Marketing", "Jump City Green",
+                   "Techquake", "Forbin Jensen", "Benno",
+                   "Usense", "TwentyOneThings", "HooBoo",
+                   "CraveIt", "DemApples", "YoSoy!",
+                   "Stronglink SEO"]
   gender_list = ["male", "female"]
   ip_addresses = ["136.0.16.217","85.90.227.224","79.125.105.1",
-                  "177.8.170.11","180.216.82.251","27.131.106.10",
+                  "177.9.63.135","180.216.82.251","124.170.22.91",
                   "128.122.253.1","85.214.132.117","184.154.83.119",
                   "194.32.31.1","106.51.30.0","219.93.13.232"]
   non_company_emails = ["bestmail.com", "examplemail.io", "supermail.net",
@@ -130,16 +139,19 @@ def sample_data_app(app_id, api_key, users_num, leads=false)
     all_users << user_data
     #if it is leads there are no bulk jobs
     if leads
-      lead.create_lead(user_data)
+      #lead.create_lead(user_data)
     end
-    #usr.create_user(user_data)
+    if not bulk
+      #Sometimes might want to create single users instead of bulk jobs
+      usr.create_user(user_data)
+    end
 
   }
-  if not leads
-    #intercom.users.submit_bulk_job(create_items: all_users)
+  if not leads and bulk
+    intercom.users.submit_bulk_job(create_items: all_users)
   end
   puts all_users
 
 end
 
-sample_data_app(ARGV[0], ARGV[1], ARGV[2], ARGV[3])
+sample_data_app(ARGV[0], ARGV[1], ARGV[2], ARGV[3], ARGV[4])

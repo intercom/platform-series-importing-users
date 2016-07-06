@@ -7,7 +7,7 @@ class UserTasks < IntercomClient
 
   def create_user(args)
     #Create a new user with list of values passed on setup
-    user = @@intercom.users.create(args)
+    user = @@intercom.users.create(create_items: args)
   end
 
   def find_user(criteria)
@@ -42,6 +42,11 @@ class UserTasks < IntercomClient
     else
       puts("No CSV file found")
     end
+  end
+
+  def submit_bulk_job(user_params)
+    #Simple wrapper to create bulk job
+    @@intercom.users.submit_bulk_job(create_items: user_params )
   end
 
   def show_attrib(criteria, attrib )

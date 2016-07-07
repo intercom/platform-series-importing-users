@@ -7,7 +7,7 @@ class UserTasks < IntercomClient
 
   def create_user(args)
     #Create a new user with list of values passed on setup
-    user = @@intercom.users.create(create_items: args)
+    user = @@intercom.users.create(args)
   end
 
   def find_user(criteria)

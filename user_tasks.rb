@@ -44,6 +44,11 @@ class UserTasks < IntercomClient
     end
   end
 
+  def submit_bulk_job(user_params)
+    #Simple wrapper to create bulk job
+    @@intercom.users.submit_bulk_job(create_items: user_params )
+  end
+
   def show_attrib(criteria, attrib )
     begin
       #First we check whether this is a standard attribute

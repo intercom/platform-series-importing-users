@@ -85,8 +85,7 @@ def sample_data_app(app_id, api_key, users_num, leads=false, bulk=true)
     else
       #If it is a lead than we need to create some with no emails
       if Faker::Boolean.boolean(0.3)
-        user_data[:email] = Faker::Internet.user_name(users_name) + "@"
-                            non_company_emails.sample
+        user_data[:email] = Faker::Internet.user_name(users_name) + "@" + non_company_emails.sample
       end
     end
     if not leads
@@ -139,13 +138,12 @@ def sample_data_app(app_id, api_key, users_num, leads=false, bulk=true)
     all_users << user_data
     #if it is leads there are no bulk jobs
     if leads
-      #lead.create_lead(user_data)
+      lead.create_lead(user_data)
     end
-    if not bulk
+    if not leads and not bulk
       #Sometimes might want to create single users instead of bulk jobs
       usr.create_user(user_data)
     end
-
   }
   if not leads and bulk
     intercom.users.submit_bulk_job(create_items: all_users)

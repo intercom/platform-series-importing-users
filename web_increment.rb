@@ -13,7 +13,7 @@ def web_increment(app_id, api_key, users=[])
   an_hour_ago = now - 60 * 60
 
   user_list.each do |user_criteria|
-    sessions_num = Faker::Number.between(1, 3)
+    sessions_num = Faker::Number.between(10, 30)
     usr.update_customer_attrib(user_criteria, "new_session", true)
     usr.update_customer_attrib(user_criteria, "last_request_at", rand(a_day_ago..an_hour_ago))
 

@@ -107,7 +107,7 @@ def sample_data_app(app_id, api_key, users_num, leads=false, bulk=true)
 
     #get some sample avatars to use
     if not leads
-      uri = URI.parse("http://api.randomuser.me/?gender=" + gender + "&inc=picture")
+      uri = URI.parse("https://randomuser.me/api/?gender=" + gender + "&inc=picture")
       response = Net::HTTP.get_response(uri)
       avatar_url = JSON.parse(response.body)['results'][0]['picture']['large']
       avatar = {:image_url => avatar_url}
@@ -153,3 +153,4 @@ def sample_data_app(app_id, api_key, users_num, leads=false, bulk=true)
 end
 
 sample_data_app(ARGV[0], ARGV[1], ARGV[2], ARGV[3], ARGV[4])
+

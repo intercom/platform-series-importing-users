@@ -3,9 +3,9 @@ require './user_tasks'
 require './tag_tasks'
 require './event_tasks'
 
-def sample_data(csv_file, app_id, api_key)
+def sample_data(csv_file, token)
   #Initialize Intercom with your credentials
-  IntercomClient.new(app_id, api_key)
+  IntercomClient.new(token)
   #Instantiate your user class
   usr = UserTasks.new
   tag = TagTasks.new
